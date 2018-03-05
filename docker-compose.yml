@@ -1,0 +1,36 @@
+version: '3.1'
+
+# environment values are loaded from .env
+
+secrets:
+  opc_yml:
+    file: opc.yml
+
+services:
+  opc:
+    build:
+      context: .
+      args:
+        - OPC_UID=777
+    image: opc
+    command: "--debug"
+    volumes:
+     - ./opc:/usr/src/opc/opc
+     - ./plugins:/home/opc/plugins
+     - ./layouts:/home/opc/layouts
+     - ./opc.yml:/home/opc/opc.yml
+    secrets:
+      - source: opc_yml
+        uid: '777'
+        gid: '777'
+        mode: 0600
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s

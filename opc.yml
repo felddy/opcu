@@ -1,0 +1,213 @@
+version: 1.0
+
+layouts-directory: layouts
+plugins-directory: plugins
+fps: 30
+
+host-defaults:    &host-defaults
+  port: 7890
+  sub-pixel-power: 20 #milliamps
+  gamma: [1.0, 1.0, 1.0]
+
+power-supplies:
+  utility-room: 100
+  shelves: 10
+  arcade: 4
+
+server-groups:
+  simulator:
+    enable: no
+    layout: four_meters_l2r
+    hosts:
+      localhost:
+        <<: *host-defaults
+        ip: 127.0.0.1
+        port: 7892
+  arcade:
+    enable: yes
+    layout: four_meters_l2r
+    hosts:
+      arcade-pi:
+        <<: *host-defaults
+        gamma: [1.0, 1.0, 1.0]
+        power-supply: arcade
+        ip: 10.28.20.118
+        start: 0
+        end: 149
+  shelves:
+    enable: yes
+    layout: shelves
+    hosts:
+      shelves-pi:
+        <<: *host-defaults
+        power-supply: shelves
+        ip: shelves.lan
+        start: 0
+        end: 143
+  ceiling:
+    enable: yes
+    layout: ceiling
+    hosts:
+      north-feather:
+        <<: *host-defaults
+        power-supply: utility-room
+        ip: 10.28.20.130
+        start: 0
+        end: 359
+      east-feather:
+        <<: *host-defaults
+        power-supply: utility-room
+        ip: 10.28.20.131
+        start: 360
+        end: 629
+      south-feather:
+        <<: *host-defaults
+        power-supply: utility-room
+        ip: 10.28.20.132
+        start: 630
+        end: 989
+      # west-feather:
+      #   <<: *host-defaults
+      #   power-supply: utility-room
+      #   ip: 10.28.20.133
+      #   start: 990
+      #   end: 1259
+  cal-ceiling:
+    enable: no
+    layout: cal_ceiling
+    hosts:
+      ceiling-feather:
+        <<: *host-defaults
+        power-supply: cal-ceiling-power
+        ip: 172.26.110.73
+        start: 0
+        end: 440 #719
+  cal-cubes:
+    enable: no
+    layout: four_meters_l2r
+    hosts:
+      cube-feather:
+        <<: *host-defaults
+        power-supply: cal-ceiling-power
+        ip: 172.26.110.74
+        start: 0
+        end: 240
+
+
+scenes:
+  all-off: &shutdown-scene
+    - groups:
+      source: Solid
+  warm-cool: &startup-scene
+    - groups: [ceiling]
+      source: Water
+    # - groups: [cal-ceiling]
+    #   source: Water
+    - groups: [arcade]
+      source: Sunset
+    - groups: [shelves]
+      source: Water #SmoothBlocks
+      # args:
+      #   block_size: 9
+  water:
+    - groups:
+      source: Water
+  test:
+    - groups:
+      source: SmoothBlocks
+      args:
+        block_size: 16
+  sunset:
+    - groups:
+      source: Sunset
+  dance:
+    - groups: [ceiling]
+      source: CycleSolid
+      args:
+        tempo: 98
+    - groups: [arcade, shelves]
+      source: CycleSolid
+      args:
+        tempo: 49
+        seed: 1
+  super-green:
+    - groups:
+      source: Solid
+      args:
+        hsv: [0.33, 1.0, 1.0]
+  super-blue:
+    - groups:
+      source: Solid
+      args:
+        hsv: [0.66, 1.0, 1.0]
+  alert:
+    - groups: [ceiling]
+      source: CycleSolid
+      args:
+        tempo: 120
+        hsv_colors: [[0.0,1.0,0.5], [0.0,1.0,1.0]]
+    - groups: [arcade]
+      source: CycleSolid
+      args:
+        tempo: 60
+        hsv_colors: [[0.0,1.0,1.0], [0.0,1.0,0.1]]
+    - groups: [shelves]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 18
+        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,0.0]]
+  bills:
+    - groups: [ceiling]
+      source: Strand
+      args:
+        spacing: 10
+        grouping: 1
+        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,1.0]]
+    - groups: [shelves]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 18
+        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,1.0]]
+    - groups: [arcade]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 30
+        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,1.0]]
+  holiday:
+    - groups: [ceiling]
+      source: Strand
+      args:
+        spacing: 10
+        grouping: 1
+        #rgb_colors: [[1.0,0.0,0.0], [0.0,1.0,0.0], [0.0,0.0,1.0]]
+        rgb_colors: [[0.5,0.0,0.0], [1.0,1.0,1.0]]
+    - groups: [shelves]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 18
+        rgb_colors: [[0.5,0.0,0.0], [1.0,1.0,1.0]]
+    - groups: [arcade]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 30
+        rgb_colors: [[0.5,0.0,0.0], [1.0,1.0,1.0]]
+
+  startup: *startup-scene
+  shutdown: *shutdown-scene
+
+key-bindings:
+  '0':
+    scene: all-off
+  'w':
+    scene: water
+  's':
+    scene: sunset
+  'S':
+    scene: all-off
+  't':
+    tempo:
