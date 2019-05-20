@@ -40,10 +40,7 @@ For more information about using the IDE with the Feather [see here](https://lea
 
 This project is based on [Adafruit Lightship](https://github.com/adafruit/Adafruit_Lightship/)
 
-## TODO
+## Contributing
 
-move power calculations to groups
-
-DotStar = APA102 = Has a clock
-
-NeoPixels = Single-wire control
+We welcome contributions!  Please see [here](CONTRIBUTING.md) for
+details.
