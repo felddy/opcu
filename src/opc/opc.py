@@ -1,6 +1,6 @@
 #!/usr/bin/env python
+"""Python Client library for Open Pixel Control.
 
-"""Python Client library for Open Pixel Control
 http://github.com/zestyping/openpixelcontrol
 
 Sends pixel values to an Open Pixel Control server to be displayed.
@@ -35,9 +35,19 @@ Recommended use:
 
 import socket
 
-class Client(object):
 
-    def __init__(self, server_ip_port=None, host=None, port=None, long_connection=True, verbose=False, gamma=(1.0,1.0,1.0)):
+class Client(object):
+    """Client class that sends pixels to a server."""
+
+    def __init__(
+        self,
+        server_ip_port=None,
+        host=None,
+        port=None,
+        long_connection=True,
+        verbose=False,
+        gamma=(1.0, 1.0, 1.0),
+    ):
         """Create an OPC client object which sends pixels to an OPC server.
 
         server_ip_port should be an ip:port or hostname:port as a single string.
@@ -67,14 +77,14 @@ class Client(object):
             self._ip = host
             self._port = port
         else:
-            self._ip, self._port = server_ip_port.split(':')
+            self._ip, self._port = server_ip_port.split(":")
         self._port = int(self._port)
 
         self._socket = None  # will be None when we're not connected
 
     def _debug(self, m):
         if self.verbose:
-            print('    %s' % str(m))
+            print("    %s" % str(m))
 
     def _ensure_connected(self):
         """Set up a connection if one doesn't already exist.
@@ -83,11 +93,11 @@ class Client(object):
 
         """
         if self._socket:
-            self._debug('_ensure_connected: already connected, doing nothing')
+            self._debug("_ensure_connected: already connected, doing nothing")
             return True
 
         try:
-            self._debug('_ensure_connected: trying to connect...')
+            self._debug("_ensure_connected: trying to connect...")
             if self._udp:
                 self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             else:
@@ -95,16 +105,16 @@ class Client(object):
                 self._socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 self._socket.settimeout(1)
                 self._socket.connect((self._ip, self._port))
-            self._debug('_ensure_connected:    ...success')
+            self._debug("_ensure_connected:    ...success")
             return True
         except socket.error:
-            self._debug('_ensure_connected:    ...failure')
+            self._debug("_ensure_connected:    ...failure")
             self._socket = None
             return False
 
     def disconnect(self):
         """Drop the connection to the server, if there is one."""
-        self._debug('disconnecting')
+        self._debug("disconnecting")
         if self._socket:
             self._socket.close()
         self._socket = None
@@ -145,15 +155,15 @@ class Client(object):
         LED at a time (unless it's the first one).
 
         """
-        self._debug('put_pixels: connecting')
+        self._debug("put_pixels: connecting")
         is_connected = self._ensure_connected()
         if not is_connected:
-            self._debug('put_pixels: not connected.  ignoring these pixels.')
+            self._debug("put_pixels: not connected.  ignoring these pixels.")
             return False
 
         # build OPC message
-        len_hi_byte = int(len(pixels)*3 / 256)
-        len_lo_byte = (len(pixels)*3) % 256
+        len_hi_byte = int(len(pixels) * 3 / 256)
+        len_lo_byte = (len(pixels) * 3) % 256
         header = chr(channel) + chr(0) + chr(len_hi_byte) + chr(len_lo_byte)
         pieces = [header]
         for r, g, b in pixels:
@@ -162,23 +172,23 @@ class Client(object):
             b = min(255, max(0, int(b ** self._gamma[2] * 255)))
             pieces.append(chr(r) + chr(g) + chr(b))
         if bytes is str:
-            message = ''.join(pieces)
+            message = "".join(pieces)
         else:
-            message = bytes(map(ord, ''.join(pieces)))
+            message = bytes(map(ord, "".join(pieces)))
 
-        self._debug('put_pixels: sending pixels to server')
+        self._debug("put_pixels: sending pixels to server")
         try:
             if self._udp:
                 self._socket.sendto(message, (self._ip, self._port))
             else:
                 self._socket.send(message)
         except socket.error:
-            self._debug('put_pixels: connection lost.  could not send pixels.')
+            self._debug("put_pixels: connection lost.  could not send pixels.")
             self._socket = None
             return False
 
         if not self._long_connection:
-            self._debug('put_pixels: disconnecting')
+            self._debug("put_pixels: disconnecting")
             self.disconnect()
 
         return True

@@ -8,22 +8,28 @@ from functools import lru_cache
 
 registered_sources = {}
 
+
 def pixel_source(func):
-    '''Used to decorate a function to be used as a pixel source.'''
+    """Decorate a function to be used as a pixel source."""
     registered_sources[func.__name__] = func
     return func
 
+
 class PixelGenerator(object):
+    """Generates pixels for various layouts."""
+
     def __init__(self, layout):
+        """Init with a layout."""
         self._layout = layout
         self._pixels = []
 
     def n_pixels(self):
+        """Return the length of the layout in pixels."""
         return len(self._layout)
 
     @lru_cache(maxsize=4)
     def all_pixel_colors(self, t):
-        '''Compute the color of all the pixels.'''
+        """Compute the color of all the pixels."""
         n_pixels = len(self._layout)
         self._pixels = [self.pixel_color(t, ii) for ii in range(n_pixels)]
         return self._pixels
@@ -37,33 +43,37 @@ class PixelGenerator(object):
 
         Returns an (r, g, b) tuple in the range 0-255
         """
-        return (0,0,0)
+        return (0, 0, 0)
+
 
 def remap(x, oldmin, oldmax, newmin, newmax):
-    """Remap the float x from the range oldmin-oldmax to the range newmin-newmax
+    """Remap the float x from the range oldmin-oldmax to the range newmin-newmax.
 
     Does not clamp values that exceed min or max.
     For example, to make a sine wave that goes between 0 and 256:
         remap(math.sin(time.time()), -1, 1, 0, 256)
 
     """
-    zero_to_one = (x-oldmin) / (oldmax-oldmin)
-    return zero_to_one*(newmax-newmin) + newmin
+    zero_to_one = (x - oldmin) / (oldmax - oldmin)
+    return zero_to_one * (newmax - newmin) + newmin
+
 
 def clamp(x, minn, maxx):
     """Restrict the float x to the range minn-maxx."""
     return max(minn, min(maxx, x))
 
+
 def cos(x, offset=0, period=1, minn=0, maxx=1):
-    """A cosine curve scaled to fit in a 0-1 range and 0-1 domain by default.
+    """Return cosine curve scaled to fit in a 0-1 range and 0-1 domain by default.
 
     offset: how much to slide the curve across the domain (should be 0-1)
     period: the length of one wave
     minn, maxx: the output range
 
     """
-    value = math.cos((x/period - offset) * math.pi * 2) / 2 + 0.5
-    return value*(maxx-minn) + minn
+    value = math.cos((x / period - offset) * math.pi * 2) / 2 + 0.5
+    return value * (maxx - minn) + minn
+
 
 def contrast(color, center, mult):
     """Expand the color values by a factor of mult around the pivot value of center.
@@ -79,6 +89,7 @@ def contrast(color, center, mult):
     b = (b - center) * mult + center
     return (r, g, b)
 
+
 def clip_black_by_luminance(color, threshold):
     """If the color's luminance is less than threshold, replace it with black.
 
@@ -87,9 +98,10 @@ def clip_black_by_luminance(color, threshold):
 
     """
     r, g, b = color
-    if r+g+b < threshold*3:
+    if r + g + b < threshold * 3:
         return (0, 0, 0)
     return (r, g, b)
+
 
 def clip_black_by_channels(color, threshold):
     """Replace any individual r, g, or b value less than threshold with 0.
@@ -99,10 +111,14 @@ def clip_black_by_channels(color, threshold):
 
     """
     r, g, b = color
-    if r < threshold: r = 0
-    if g < threshold: g = 0
-    if b < threshold: b = 0
+    if r < threshold:
+        r = 0
+    if g < threshold:
+        g = 0
+    if b < threshold:
+        b = 0
     return (r, g, b)
+
 
 def mod_dist(a, b, n):
     """Return the distance between floats a and b, modulo n.
@@ -112,20 +128,30 @@ def mod_dist(a, b, n):
     mod_dist(11, 1, 12) == 2 because you can "wrap around".
 
     """
-    return min((a-b) % n, (b-a) % n)
+    return min((a - b) % n, (b - a) % n)
+
 
 def gamma(color, gamma):
     """Apply a gamma curve to the color.  The color values should be in the range 0-1."""
     r, g, b = color
     return (max(r, 0) ** gamma, max(g, 0) ** gamma, max(b, 0) ** gamma)
 
+
 def gamma3(color, gamma_rgb):
     """Apply a gamma curve to the color.  The color values should be in the range 0-1."""
     r, g, b = color
-    return (max(r, 0) ** gamma_rgb[0], max(g, 0) ** gamma_rgb[1], max(b, 0) ** gamma_rgb[2])
+    return (
+        max(r, 0) ** gamma_rgb[0],
+        max(g, 0) ** gamma_rgb[1],
+        max(b, 0) ** gamma_rgb[2],
+    )
+
 
 def scale(vector, scalar):
+    """Scaled a vector by a scalar."""
     return [x * scalar for x in vector]
 
+
 def v_add(v1, v2):
+    """Add two vectors together."""
     return [x + y for x, y in zip(v1, v2)]
