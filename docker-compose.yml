@@ -16,9 +16,10 @@ services:
     image: opc
     command: "--debug"
     volumes:
-      - ./opc:/usr/src/opc/opc
+      - ./src:/usr/src/src
       - ./plugins:/home/opc/plugins
       - ./layouts:/home/opc/layouts
       - ./opc.yml:/home/opc/opc.yml
     secrets:
       - source: opc_yml
+        target: opc.yml
