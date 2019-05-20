@@ -44,17 +44,6 @@ logger = None
 running = True
 config_changed = False
 
-# def parse_server(server):
-#     # IPv6 address with port or IPv4 with port
-#     if (']' in server and ':' in server) or server.count(':') == 1:
-#         ip, port = server.rsplit(':', 1)
-#     # Just an IP
-#     else:
-#         ip = server
-#         port = DEFAULT_PORT
-#     ip = ip.strip('[]')
-#     return ipaddress.ip_address(ip), port
-
 
 class ServerGroup(object):
     """Defines a group of servers that host LED segments of a layout."""
