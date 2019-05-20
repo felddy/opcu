@@ -1,4 +1,9 @@
-# UDP version of Open Pixel Control
+# UDP version of Open Pixel Control 🎛💡
+
+[![Build Status](https://travis-ci.com/felddy/opcu.svg?branch=develop)](https://travis-ci.com/felddy/opcu)
+[![Coverage Status](https://coveralls.io/repos/github/felddy/opcu/badge.svg?branch=develop)](https://coveralls.io/github/felddy/opcu?branch=develop)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/felddy/opcu.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/felddy/opcu/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/felddy/opcu.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/felddy/opcu/context:python)
 
 Consuming raw or undercooked meats, poultry, seafood, shellfish or eggs may
 increase your risk of foodborne illness.
