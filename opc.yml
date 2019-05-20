@@ -1,10 +1,11 @@
+---
 version: 1.0
 
 layouts-directory: layouts
 plugins-directory: plugins
 fps: 30
 
-host-defaults:    &host-defaults
+host-defaults: &host-defaults
   port: 7890
   sub-pixel-power: 20 #milliamps
   gamma: [1.0, 1.0, 1.0]
@@ -93,12 +94,11 @@ server-groups:
         start: 0
         end: 240
 
-
 scenes:
   all-off: &shutdown-scene
     - groups:
       source: Solid
-  warm-cool: &startup-scene
+  warm-cool:
     - groups: [ceiling]
       source: Water
     # - groups: [cal-ceiling]
@@ -109,6 +109,36 @@ scenes:
       source: Water #SmoothBlocks
       # args:
       #   block_size: 9
+  outrun: &startup-scene
+    - groups: [ceiling]
+      source: CoolRun
+    # - groups: [cal-ceiling]
+    #   source: Water
+    - groups: [arcade]
+      source: Water
+    - groups: [shelves]
+      source: Sunset
+  rave:
+    - groups: [ceiling]
+      source: Strobe
+    # - groups: [cal-ceiling]
+    #   source: Water
+    - groups: [arcade]
+      source: Strobe
+    - groups: [shelves]
+      source: Strobe
+  tron:
+    - groups: [ceiling]
+      source: LightCycles
+    # - groups: [cal-ceiling]
+    #   source: Water
+    - groups: [arcade]
+      source: Water
+    - groups: [shelves]
+      source: Sunset
+  mars:
+    - groups:
+      source: Mars
   water:
     - groups:
       source: Water
@@ -116,7 +146,10 @@ scenes:
     - groups:
       source: SmoothBlocks
       args:
-        block_size: 16
+        block_size: 18
+  robert:
+    - groups:
+      source: Plaid
   sunset:
     - groups:
       source: Sunset
@@ -124,11 +157,11 @@ scenes:
     - groups: [ceiling]
       source: CycleSolid
       args:
-        tempo: 98
+        tempo: 128
     - groups: [arcade, shelves]
       source: CycleSolid
       args:
-        tempo: 49
+        tempo: 128
         seed: 1
   super-green:
     - groups:
@@ -145,69 +178,147 @@ scenes:
       source: CycleSolid
       args:
         tempo: 120
-        hsv_colors: [[0.0,1.0,0.5], [0.0,1.0,1.0]]
+        hsv_colors: [[0.0, 1.0, 0.5], [0.0, 1.0, 1.0]]
     - groups: [arcade]
       source: CycleSolid
       args:
         tempo: 60
-        hsv_colors: [[0.0,1.0,1.0], [0.0,1.0,0.1]]
+        hsv_colors: [[0.0, 1.0, 1.0], [0.0, 1.0, 0.1]]
     - groups: [shelves]
       source: Strand
       args:
         spacing: 2
         grouping: 18
-        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,0.0]]
+        rgb_colors: [[1.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
   bills:
     - groups: [ceiling]
       source: Strand
       args:
         spacing: 10
         grouping: 1
-        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,1.0]]
+        rgb_colors: [[1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]
     - groups: [shelves]
       source: Strand
       args:
         spacing: 2
         grouping: 18
-        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,1.0]]
+        rgb_colors: [[1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]
     - groups: [arcade]
       source: Strand
       args:
         spacing: 2
         grouping: 30
-        rgb_colors: [[1.0,0.0,0.0], [0.0,0.0,1.0]]
-  holiday:
+        rgb_colors: [[1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]
+  caps:
+    - groups: [ceiling]
+      source: Strand
+      args:
+        spacing: 10
+        grouping: 1
+        rgb_colors: [[1.0, 0.0, 0.0], [1.0, 1.0, 1.0]]
+    - groups: [shelves]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 18
+        rgb_colors: [[1.0, 0.0, 0.0], [1.0, 1.0, 1.0]]
+    - groups: [arcade]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 30
+        rgb_colors: [[1.0, 0.0, 0.0], [1.0, 1.0, 1.0]]
+  cinco:
+    - groups: [ceiling]
+      source: Strand
+      args:
+        spacing: 10
+        grouping: 10
+        rgb_colors:
+          [
+            [0.87, 0.28, 0.13],
+            [0.2, 0.63, 0.35],
+            [1.0, 0.71, 0.11],
+            [0.85, 0.39, 0.0],
+            [0.28, 0.18, 0.05],
+          ]
+    - groups: [shelves]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 18
+        rgb_colors:
+          [
+            [0.87, 0.28, 0.13],
+            [0.2, 0.63, 0.35],
+            [1.0, 0.71, 0.11],
+            [0.85, 0.39, 0.0],
+            [0.28, 0.18, 0.05],
+          ]
+    - groups: [arcade]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 30
+        rgb_colors:
+          [
+            [0.87, 0.28, 0.13],
+            [0.2, 0.63, 0.35],
+            [1.0, 0.71, 0.11],
+            [0.85, 0.39, 0.0],
+            [0.28, 0.18, 0.05],
+          ]
+  winter:
     - groups: [ceiling]
       source: Strand
       args:
         spacing: 10
         grouping: 1
         #rgb_colors: [[1.0,0.0,0.0], [0.0,1.0,0.0], [0.0,0.0,1.0]]
-        rgb_colors: [[0.5,0.0,0.0], [1.0,1.0,1.0]]
+        rgb_colors: [[0.0, 0.6, 0.3], [1.0, 1.0, 1.0]]
     - groups: [shelves]
       source: Strand
       args:
         spacing: 2
         grouping: 18
-        rgb_colors: [[0.5,0.0,0.0], [1.0,1.0,1.0]]
+        rgb_colors: [[0.0, 0.6, 0.3], [1.0, 1.0, 1.0]]
     - groups: [arcade]
       source: Strand
       args:
         spacing: 2
         grouping: 30
-        rgb_colors: [[0.5,0.0,0.0], [1.0,1.0,1.0]]
+        rgb_colors: [[0.0, 0.6, 0.3], [1.0, 1.0, 1.0]]
+  xmas:
+    - groups: [ceiling]
+      source: Strand2
+      args:
+        spacing: 40
+        grouping: 1
+        #rgb_colors: [[1.0,0.0,0.0], [0.0,1.0,0.0]]
+    - groups: [shelves]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 18
+        rgb_colors: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]
+    - groups: [arcade]
+      source: Strand
+      args:
+        spacing: 2
+        grouping: 30
+        rgb_colors: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]
 
   startup: *startup-scene
   shutdown: *shutdown-scene
 
 key-bindings:
-  '0':
+  "0":
     scene: all-off
-  'w':
+  "w":
     scene: water
-  's':
+  "s":
     scene: sunset
-  'S':
+  "S":
     scene: all-off
-  't':
+  "t":
     tempo:
