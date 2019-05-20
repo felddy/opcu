@@ -1,14 +1,14 @@
 #!/usr/bin/env python
+"""Generate ceiling layout."""
 import json
-import sys
 
-def ceiling():
+
+def _ceiling():
     SPACING = 1.0 / 60  # m
-    ROOM_WIDTH = 4.5 #m
-    ROOM_LENGTH = 6.0 #m
+    ROOM_WIDTH = 4.5  # m
+    ROOM_LENGTH = 6.0  # m
     NORTH_LEDS = SOUTH_LEDS = int(ROOM_LENGTH * 60)
     EAST_LEDS = WEST_LEDS = int(ROOM_WIDTH * 60)
-
 
     # 0,0           y-axis             0,6.0
     # -->>------- North 6m --------------
@@ -25,25 +25,25 @@ def ceiling():
 
     points = []
     x = y = 0
-    z = 2.4 #m
+    z = 2.4  # m
 
     # North
     for c in range(0, NORTH_LEDS):
         y = c * SPACING
-        points.append({'point':[x,y,z]})
-    y = (c+1) * SPACING
+        points.append({"point": [x, y, z]})
+    y = (c + 1) * SPACING
 
     # East
     for c in range(0, EAST_LEDS):
         x = c * SPACING
-        points.append({'point':[x,y,z]})
-    x = (c+1) * SPACING
+        points.append({"point": [x, y, z]})
+    x = (c + 1) * SPACING
 
     # South
     for c in range(SOUTH_LEDS, 0, -1):
         y = c * SPACING
-        points.append({'point':[x,y,z]})
-    y = (c-1) * SPACING
+        points.append({"point": [x, y, z]})
+    y = (c - 1) * SPACING
 
     # West
     for c in range(WEST_LEDS, 0, -1):
@@ -54,13 +54,16 @@ def ceiling():
         elif c == 20:
             # up after screen
             z += 0.2
-        points.append({'point':[x,y,z]})
+        points.append({"point": [x, y, z]})
 
     return points
 
+
 def main():
-    points = ceiling()
+    """Start of processing."""
+    points = _ceiling()
     print(json.dumps(points, indent=2))
 
-if __name__=='__main__':
+
+if __name__ == "__main__":
     main()

@@ -1,13 +1,13 @@
-"""Water generator."""
+"""Mars generator."""
 from opc import color_utils
 
 
 @color_utils.pixel_source
-class Water(color_utils.PixelGenerator):
-    """Water generator."""
+class Mars(color_utils.PixelGenerator):
+    """Mars generator."""
 
     def __init__(self, layout):
-        """Initilize generator with layout."""
+        """Init generator with layout."""
         super().__init__(layout)
 
     def pixel_color(self, t, ii):
@@ -25,9 +25,19 @@ class Water(color_utils.PixelGenerator):
 
         w1 = color_utils.cos(t, period=17)
         w2 = color_utils.cos(t, offset=30, period=23)
-        # r = g = b = color_utils.cos(x+y, offset=w1, period=1, minn=0.0, maxx=0.4)
-        # (r,g,b) = color_utils.contrast((r,g,b), 0.5, 4)
-        r = 0
-        b = color_utils.cos(x + y, offset=w1, period=5, minn=0.1, maxx=0.5)
-        g = color_utils.cos(x + y, offset=w2, period=3, minn=0.2, maxx=0.4)
+
+        red = (1.0, 0.0, 0.0)
+        orange = (0.5, 0.25, 0.0)
+
+        channel_1 = color_utils.scale(
+            red, color_utils.cos(x + y, offset=-w2, period=3, minn=0.1, maxx=0.5)
+        )
+        channel_2 = color_utils.scale(
+            orange, color_utils.cos(x + y, offset=w1, period=5, minn=0.1, maxx=0.5)
+        )
+
+        r, g, b = (0, 0, 0)
+        r, g, b = color_utils.v_add([r, g, b], channel_1)
+        r, g, b = color_utils.v_add([r, g, b], channel_2)
+
         return (r, g, b)

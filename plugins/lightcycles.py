@@ -1,13 +1,13 @@
-"""Spark plugin."""
+"""Generate light cycle effect."""
 from opc import color_utils
 
 
 @color_utils.pixel_source
-class Spark(color_utils.PixelGenerator):
-    """Spark generator."""
+class LightCycles(color_utils.PixelGenerator):
+    """Generate light cycle effect."""
 
     def __init__(self, layout):
-        """Initilize generator with layout."""
+        """Init generator with layout."""
         super().__init__(layout)
 
     def pixel_color(self, t, ii):
@@ -23,14 +23,10 @@ class Spark(color_utils.PixelGenerator):
         """
         r = g = b = 0
         # make a moving white dot showing the order of the pixels in the layout file
-        spark_ii = (t * 80) % self.n_pixels()
-        spark_rad = 16
-        spark_val = max(
-            0,
-            (spark_rad - color_utils.mod_dist(ii, spark_ii, self.n_pixels()))
-            / spark_rad,
-        )
-        spark_val = min(1, spark_val * 2)
+        spark_ii = int((t * 80) % self.n_pixels())
+        # spark_val = max(0, (spark_rad - color_utils.mod_dist(ii, spark_ii, self.n_pixels())) / spark_rad)
+        spark_val = 1.0 if ii == spark_ii else 0.0
+        # spark_val = min(1, spark_val*2)
         r += spark_val
         g += spark_val
         b += spark_val

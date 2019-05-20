@@ -4,7 +4,7 @@ import colorsys
 
 
 @color_utils.pixel_source
-class Strand(color_utils.PixelGenerator):
+class Strand2(color_utils.PixelGenerator):
     """Strand generator."""
 
     def __init__(
@@ -18,7 +18,12 @@ class Strand(color_utils.PixelGenerator):
         else:
             self.rgb_colors = rgb_colors
         if not self.rgb_colors:
-            self.rgb_colors = ((1.0, 0.0, 0.0), (0.0, 1.0, 0.0))
+            self.rgb_colors = (
+                (1.0, 0.0, 0.0),
+                (0.0, 1.0, 0.0),
+                (0.0, 0.0, 1.0),
+                (1.0, 1.0, 0),
+            )
         self.lookup = self.gen_strand()
         super().__init__(layout)
 
@@ -52,6 +57,11 @@ class Strand(color_utils.PixelGenerator):
         """
         # x, y, z = self._layout[ii]
         r = g = b = 0
+
+        blinker = color_utils.cos(ii / 100, offset=t / 8, period=1, minn=0.0, maxx=1.0)
+
+        if blinker < 0.5:
+            return (0, 0, 0)
 
         m = int(ii / self.grouping) % self.spacing
 

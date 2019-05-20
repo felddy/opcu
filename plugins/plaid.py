@@ -1,9 +1,13 @@
+"""Plaid plugin."""
 from opc import color_utils
-import random
+
 
 @color_utils.pixel_source
 class Plaid(color_utils.PixelGenerator):
+    """Plaid generator."""
+
     def __init__(self, layout):
+        """Init generator with layout."""
         super().__init__(layout)
 
     def pixel_color(self, t, ii):
@@ -19,16 +23,20 @@ class Plaid(color_utils.PixelGenerator):
         """
         # make moving stripes for x, y, and z
         x, y, z = self._layout[ii]
-        r = color_utils.cos(x+y+z, offset=t / 4, period=1, minn=0, maxx=0.7)
-        g = color_utils.cos(x+y+z, offset=t / 3, period=1, minn=0, maxx=0.7)
-        b = color_utils.cos(x+y+z, offset=t / 5, period=1, minn=0, maxx=0.7)
+        r = color_utils.cos(x + y + z, offset=t / 4, period=1, minn=0, maxx=0.7)
+        g = color_utils.cos(x + y + z, offset=t / 3, period=1, minn=0, maxx=0.7)
+        b = color_utils.cos(x + y + z, offset=t / 5, period=1, minn=0, maxx=0.7)
         r, g, b = color_utils.contrast((r, g, b), 0.5, 2)
 
         # make a moving white dot showing the order of the pixels in the layout file
-        spark_ii = (t*80) % self.n_pixels()
+        spark_ii = (t * 80) % self.n_pixels()
         spark_rad = 8
-        spark_val = max(0, (spark_rad - color_utils.mod_dist(ii, spark_ii, self.n_pixels())) / spark_rad)
-        spark_val = min(1, spark_val*2)
+        spark_val = max(
+            0,
+            (spark_rad - color_utils.mod_dist(ii, spark_ii, self.n_pixels()))
+            / spark_rad,
+        )
+        spark_val = min(1, spark_val * 2)
         r += spark_val
         g += spark_val
         b += spark_val
