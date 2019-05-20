@@ -3,3 +3,5 @@
 # Already being linted by yamllint
 *.yaml
 *.yml
+# Already being linted by pretty-format-json
+*.json
