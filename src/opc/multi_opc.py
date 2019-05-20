@@ -14,21 +14,24 @@ Options:
 
 """
 
-import os
-import sys
-import signal
-import threading
-import re
-import json
-import time
-import copy
-import logging
 from importlib import import_module
+import copy
+import json
+import logging
+import os
+import re
+import signal
+import sys
+import threading
+import time
+
 from docopt import docopt
 import yaml
 from watchdog.events import FileSystemEventHandler
-from opc import opc
-from opc import color_utils
+
+import color_utils
+import opc
+from ._version import __version__
 
 DEFAULT_CONFIG_FILENAME = "opc.yml"
 LOGGER_FORMAT = "%(asctime)-15s %(levelname)s %(name)s - %(message)s"
@@ -347,7 +350,7 @@ def do_work(config):
 def main():
     """Start of Multi OPC program."""
     global logger, config_changed, running
-    args = docopt(__doc__, version="v0.0.1")
+    args = docopt(__doc__, version=__version__)
     logger = setup_logging(args["--debug"])
     signal.signal(signal.SIGINT | signal.SIGTERM, shutdown_handler)
     signal.signal(signal.SIGHUP, reload_handler)
