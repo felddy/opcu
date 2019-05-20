@@ -29,8 +29,8 @@ from docopt import docopt
 import yaml
 from watchdog.events import FileSystemEventHandler
 
-import color_utils
-import opc
+from . import color_utils
+from . import opc
 from ._version import __version__
 
 DEFAULT_CONFIG_FILENAME = "opc.yml"
@@ -165,7 +165,7 @@ class MultiClient(threading.Thread):
 
     def __load_plugins(self):
         logger.info("Loading plugins")
-        if sys.path not in self.__plugins_dir:
+        if self.__plugins_dir not in sys.path:
             sys.path.insert(0, self.__plugins_dir)
         py_re = re.compile(r"^(?!__).*\.py")
         pluginfiles = filter(py_re.search, os.listdir(self.__plugins_dir))
