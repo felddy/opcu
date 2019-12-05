@@ -78,6 +78,7 @@ class Client(object):
             self._port = port
         else:
             self._ip, self._port = server_ip_port.split(":")
+        self._ip = socket.gethostbyname(self._ip)
         self._port = int(self._port)
 
         self._socket = None  # will be None when we're not connected
