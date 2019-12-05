@@ -78,9 +78,9 @@ can create and configure the Python virtual environment with these
 commands:
 
 ```bash
-cd skeleton-python-library
-pyenv virtualenv <python_version_to_use> skeleton-python-library
-pyenv local skeleton-python-library
+cd opcu
+pyenv virtualenv <python_version_to_use> opcu
+pyenv local opcu
 pip install -r requirements-dev.txt
 ```
 
